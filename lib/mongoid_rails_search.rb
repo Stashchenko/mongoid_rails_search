@@ -1,3 +1,4 @@
+require 'jquery-ui-rails'
 require 'mongoid_rails_search/action_controller'
 require 'mongoid_rails_search/railtie'
 require 'mongoid_rails_search/version'
