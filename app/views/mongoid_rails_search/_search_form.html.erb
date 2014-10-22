@@ -1,0 +1,10 @@
+<%= form_for :search, url: @options[:url], method: @options[:method], html: {class: @options[:class]} do |f| %>
+    <%= hidden_field_tag('search[object_class]', @object_class) %>
+    <% @fields.map do |field| %>
+        <%= content_tag(:fieldset) do %>
+            <%= label_tag(field, tf(@object_class, field)) %>
+            <%= generate_field(f, field) %>
+        <% end %>
+    <% end %>
+    <%= submit_tag t('search') %>
+<% end %>
