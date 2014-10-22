@@ -3,7 +3,7 @@
     <% @fields.map do |field| %>
         <%= content_tag(:fieldset) do %>
             <%= label_tag(field, tf(@object_class, field)) %>
-            <%= generate_field(f, field) %>
+            <%= generate_tag(f, field) %>
         <% end %>
     <% end %>
     <%= submit_tag t('search') %>

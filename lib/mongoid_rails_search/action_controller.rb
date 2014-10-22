@@ -8,11 +8,13 @@ module MongoidRailsSearch
     included do
       include ClassMethods
       helper HelperMethods
+      helper LocalizationHelper
     end
 
     module ClassMethods
 
       def search_request
+        return if params[:search].blank?
         params_condition = params[:condition].dup if params[:condition].present?
         params_search = params[:search].dup if params[:search].present?
         params_type = params[:types].dup if params[:types].present?
@@ -24,18 +26,17 @@ module MongoidRailsSearch
         return false unless query.present?
         return klass.where(query)
       end
+
     end
 
   end
 
   module HelperMethods
 
-
     def search_form(object_class, fields = [], options = {})
       options[:class] ||= 'width_full'
       options[:method] ||= 'get'
       options[:url] ||= "/#{params[:controller]}"
-      @values ||={}
       fields -= %W(_id)
       @object_class = object_class
       @options = options
@@ -45,32 +46,40 @@ module MongoidRailsSearch
       render partial: 'mongoid_rails_search/search_form'
     end
 
-
-    def generate_field(form, field)
+    def generate_tag(form, field)
       field_type= @object_class.fields[field.to_s].type
-      condition = params[:condition].present? && params[:condition][field].present? ? params[:condition][field] : ''
+      condition = get_condition_value(field)
       value = get_search_value(field)
-      if field_type == Time || field_type == Date
-        str_fields= form.text_field(field, value: value, class: 'datepicker')
-        str_fields += hidden_field(:types, field, value: Date)
-        str_fields += select(:condition, field, options_for_select(MongoidRailsSearch::Conditions::CONDITIONS, condition))
-      elsif field_type == Boolean
-        form.check_box(field, checked: value == '1' ? true : false)
-      elsif field_type == Integer
-        form.number_field(field, value: value)
-      elsif field_type == Float
-        form.number_field(field, step: 0.001, value: value)
-      elsif field.include?('email')
-        form.email_field(field, value: value)
-      else
-        form.text_field(field, value: value)
-      end
+      MongoidRailsSearch::TagBuilder.new(form, field_type, condition, value, field).build
     end
+
 
     private
 
     def get_search_value(field)
-      value = params[:search].present? && params[:search][field].present? ? params[:search][field] : ''
+      params[:search].present? && params[:search][field].present? ? params[:search][field] : ''
+    end
+
+    def get_condition_value(field)
+      params[:condition].present? && params[:condition][field].present? ? params[:condition][field] : ''
+    end
+
+  end
+
+
+  module LocalizationHelper
+
+    def tf(model, field)
+      clazz = model.is_a?(Class) ? model : model.class
+      translate(field, scope: [:models, clazz.name.underscore])
+    end
+
+    def t_pluralize(key, options ={})
+      count = options[:count]
+      if count >= 2 && count <= 4
+        return I18n.translate("#{key}.few", options)
+      end
+      I18n.translate(key, options)
     end
 
   end
