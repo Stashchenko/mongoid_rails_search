@@ -14,7 +14,7 @@ module MongoidRailsSearch
     module ClassMethods
 
       def search_request
-        return if params[:search].blank?
+        return nil if params[:search].blank?
         params_condition = params[:condition].dup if params[:condition].present?
         params_search = params[:search].dup if params[:search].present?
         params_type = params[:types].dup if params[:types].present?
@@ -23,7 +23,7 @@ module MongoidRailsSearch
         @query_builder = MongoidRailsSearch::QueryBuilder.new
         query = @query_builder.build(params_search, params_condition, params_type)
 
-        return false unless query.present?
+        return klass unless query.present?
         return klass.where(query)
       end
 
