@@ -1,6 +1,6 @@
 module MongoidRailsSearch
 
-  class TagBuilder
+  class FieldBuilder
 
     def initialize(form, field_type, condition, value, field_name)
       @form = form
@@ -15,10 +15,8 @@ module MongoidRailsSearch
       tag_builder = @tag_builders[@field_type]
       if tag_builder
         result= tag_builder.build(@form, @field_name, @value, @condition)
-      elsif @field_name.include?('email')
-        result = @form.email_field(@field_name, value: @value)
       else
-        result= @form.text_field(@field_name, value: @value)
+        result = @tag_builders[String].build(@form, @field_name, @value, @condition)
       end
       result
     end
@@ -32,6 +30,7 @@ module MongoidRailsSearch
       @tag_builders[Integer]= MongoidRailsSearch::IntegerField.new
       @tag_builders[Float]= MongoidRailsSearch::FloatField.new
       @tag_builders[Boolean]= MongoidRailsSearch::BooleanField.new
+      @tag_builders[String]= MongoidRailsSearch::StringField.new
     end
   end
 

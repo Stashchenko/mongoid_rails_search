@@ -8,8 +8,10 @@ module MongoidRailsSearch
     LESS_THAN_EQUAL = 'lte'
     LESS_THAN = 'lt'
 
-    CONDITIONS = {'=' => EQUAL, '>=' => GREAT_THAN_EQUAL, '<=' => LESS_THAN_EQUAL, '>' => GREATE_THAN, '<' => LESS_THAN}
+    LIKE = 'like'
 
+    EQUAL_CONDITIONS = {'=' => EQUAL, '>=' => GREAT_THAN_EQUAL, '<=' => LESS_THAN_EQUAL, '>' => GREATE_THAN, '<' => LESS_THAN}
+    STRING_CONDITIONS = {'=' => EQUAL, 'like' => LIKE}
   end
 
 end

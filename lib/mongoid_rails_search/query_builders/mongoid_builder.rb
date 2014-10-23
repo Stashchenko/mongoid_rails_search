@@ -1,6 +1,6 @@
 module MongoidRailsSearch
 
-  class QueryBuilder
+  class MongoidBuilder
 
 
     def build(params_search, params_condition, params_type)
@@ -12,6 +12,8 @@ module MongoidRailsSearch
           search_condition = {}
           if params_condition[k] == MongoidRailsSearch::Conditions::EQUAL
             search_condition= generate_by_type(k, params_search, params_type)
+          elsif params_condition[k] == MongoidRailsSearch::Conditions::LIKE
+            search_condition = Regexp.new (".*#{params_search[k]}.*")
           else
             search_condition["$#{params_condition[k]}"]= params_search[k]
           end
@@ -28,7 +30,7 @@ module MongoidRailsSearch
         result['$gte']= date
         result['$lt']= date.tomorrow
       else
-        result = params_search[k]
+        result= params_search[k]
       end
       result
     end

@@ -20,7 +20,7 @@ module MongoidRailsSearch
         params_type = params[:types].dup if params[:types].present?
         klass = Object.const_get params_search[:object_class]
 
-        @query_builder = MongoidRailsSearch::QueryBuilder.new
+        @query_builder = MongoidRailsSearch::QueryManager.new(MongoidRailsSearch::MongoidBuilder.new)
         query = @query_builder.build(params_search, params_condition, params_type)
 
         return klass unless query.present?
@@ -47,10 +47,11 @@ module MongoidRailsSearch
     end
 
     def generate_tag(form, field)
-      field_type= @object_class.fields[field.to_s].type
+      field_type= @object_class.fields[field.to_s].try(:type)
+      return if field_type.blank?
       condition = get_condition_value(field)
       value = get_search_value(field)
-      MongoidRailsSearch::TagBuilder.new(form, field_type, condition, value, field).build
+      MongoidRailsSearch::FieldBuilder.new(form, field_type, condition, value, field).build
     end
 
 
