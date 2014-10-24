@@ -1,7 +1,5 @@
 # MongoidRailsSearch
 
-Dependency "jquery-ui-rails", '>= 4.2.0'
-
 mongoid_rails_search allows to generate search form and completely full response.
 But this is test gem. Use it at your own risk.
  
@@ -32,9 +30,9 @@ In your app/views/users/index.html.erb page add this line:
     
     <%= search_form(User, [:email, :confirmed_email, :subscribe_on_news, :role, :created_at]) %> 
     
-First param (Classname param)   - your model (In my case is the model: User) 
+First param  - your model (In my case is the model: User)
 
-Second param (Array param)      - which fields we use for search ([:email, :confirmed_email, :subscribe_on_news, :role, :created_at])
+Second param (Array param)      - which fields we use for search ([:email, :name, :age, :role, :created_at])
 
 In your class UserController add these line: 
      
@@ -76,7 +74,3 @@ Example:
     end
 
 Good luck.
-                                     
-## Contributing
-
-This is test gem.  
