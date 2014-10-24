@@ -1,6 +1,6 @@
 # MongoidRailsSearch
 
-mongoid_rails_search allows to generate search form and completely full response.
+mongoid_rails_search allows to generate search form and get full response with objects.
 But this is test gem. Use it at your own risk.
  
 ## Installation
